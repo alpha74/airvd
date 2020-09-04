@@ -42,7 +42,7 @@ class TemperatureReading( models.Model ):
 class HumidityReading( models.Model ):
 	uid = models.ForeignKey( Device, on_delete = models.CASCADE )
 	humidity = models.DecimalField( decimal_places = 2, max_digits = 5 )
-	timestamp = models.DateTimeField default = timezone.now )
+	timestamp = models.DateTimeField( default = timezone.now )
 	
 	def __str__( self ):
 		return self.uid + " " + self.humidity
