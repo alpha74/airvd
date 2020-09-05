@@ -27,12 +27,12 @@ class Device( models.Model ):
 		- timestamp : timestamp when reading was made
 """
 class TemperatureReading( models.Model ):
-	uid = 			models.ForeignKey( Device, on_delete = models.CASCADE )
+	device = 		models.ForeignKey( Device, on_delete = models.CASCADE )
 	temperature = 	models.DecimalField( decimal_places = 4, max_digits = 7, null=False )
 	timestamp = 	models.DateTimeField( default = timezone.now )
 	
 	def __str__( self ):
-		return self.uid + " " + self.temperature
+		return self.device.uid + " " + str(self.temperature)
 
 """
 	- uid : unique id of device
@@ -40,10 +40,10 @@ class TemperatureReading( models.Model ):
 	- timestamp : timestamp when reading was made
 """
 class HumidityReading( models.Model ):
-	uid = 			models.ForeignKey( Device, on_delete = models.CASCADE )
+	device = 		models.ForeignKey( Device, on_delete = models.CASCADE )
 	humidity = 		models.DecimalField( decimal_places = 2, max_digits = 5, null=False )
 	timestamp = 	models.DateTimeField( default = timezone.now )
 	
 	def __str__( self ):
-		return self.uid + " " + self.humidity
+		return self.device.uid + " " + str(self.humidity)
 	
