@@ -8,7 +8,7 @@ from django.utils import timezone
 		- date_added : date when device was added
 """
 class Device( models.Model ):
-	uid = 			models.CharField( max_length = 12, null=False, blank=False )
+	uid = 			models.CharField( max_length = 12, null=False, blank=False, unique=True )
 	name = 			models.TextField( max_length = 100 )
 	date_added = 	models.DateTimeField( default = timezone.now )
 	
