@@ -1,9 +1,9 @@
 from django.urls import path
-from api.views import apiAllDevice, apiDetailDevice
+from api.views import apiDevice, apiDetailDevice
 
 app_name = "airvd"
 
 urlpatterns = [
-	path ( "", apiAllDevice ),
+	path ( "", apiDevice ),
 	path( "<str:uid>/", apiDetailDevice ),
 ]
