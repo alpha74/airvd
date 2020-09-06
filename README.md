@@ -4,19 +4,19 @@
 
 ### Used:
 - Python
-    - Django
+    - Django + SQLite
     - Django REST Framework
-    - SQLite
 
 -----
 
 ### Run:
 - Create `virtualenv` using `requirements.txt`
-- Run `python manage.py runserver` in commandline. By default, server runs on port `5000`.
+- Run `python manage.py runserver` in commandline. 
+- By default, server runs on port `5000`.
 
 -----
 
-### Models:
+### Models/Classes:
 
 #### Device
 - An IoT device with properties:
@@ -27,13 +27,13 @@
     - `HumidityReading` : one-to-many
     - `TemperatureReading` : one-to-many
     
-### HumidityReading
+#### HumidityReading
 - `device` : owner device
 - `humidity` : reading
 - `timestamp` : timestamp when reading was stored in db
 
 
-### TemperatureReading
+#### TemperatureReading
 - `device` : owner device
 - `temperature` : reading
 - `timestamp` : timestamp when reading was stored in db
@@ -66,7 +66,7 @@
 - Response: `json`
 
 
-### API to return readings for a device in given period
+#### API to return readings for a device in given period
 - Endpoint: `GET /api/devices/{device-uid}/readings/{parameter}/?start_on=yyyy-mmddTHH:MM:SS&end_on=yyyy-mm-ddTHH:MM:SS`
     - `device-uid` : uid of device
     - `parameter` : **temperature** or **humidity**
