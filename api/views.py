@@ -1,3 +1,4 @@
+import time
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -5,7 +6,7 @@ from django.core.exceptions import PermissionDenied, ValidationError, ObjectDoes
 from django.shortcuts import get_object_or_404
 
 from device.models import Device, TemperatureReading, HumidityReading
-from api.serializers import DeviceSerializer
+from api.serializers import DeviceSerializer, HumidityReadingSerializer, TemperatureReadingSerializer
 
 
 """
@@ -46,10 +47,9 @@ def apiDevice( request ):
 			
 		
 		except PermissionDenied as e:
-			return Response( status = status.HTTP_401_BAD_REQUEST )
+			return Response( status = status.HTTP_401_UNAUTHORIZED )
 		
-		except ValidationError as e:
-			return Response( status = status.HTTP_409_CONFLICT )
+		
 	 
 
 		return Response( status = status.HTTP_201_CREATED )
@@ -92,7 +92,7 @@ def apiGetDeleteDevice( request, uid ):
 			Device.objects.filter( uid = uid ).delete()
 		
 		except PermissionDenied as e:
-			return Response( status = status.HTTP_401_BAD_REQUEST )
+			return Response( status = status.HTTP_401_UNAUTHORIZED )
 		
 		except ObjectDoesNotExist as e:
 			return Response( status = status.HTTP_404_NOT_FOUND )
@@ -100,3 +100,75 @@ def apiGetDeleteDevice( request, uid ):
 		if( request.method == "DELETE" ):
 			return Response( status = status.HTTP_202_ACCEPTED )
 			
+
+
+"""
+	- GET : Get device readings
+"""
+@api_view( ['GET',] )
+def apiGetReading( request, uid, parameter ):
+	
+	# Get Device readings
+	if( request.method == "GET" ):
+		try:
+			payload = request.GET
+			start_on_str = payload[ "start_on" ]
+			end_on_str = payload[ "end_on" ]
+			
+			start_on_str = start_on_str.split("T")
+			end_on_str = end_on_str.split("T")
+			
+			# Construct string for date
+			start_on = start_on_str[0] + " " + start_on_str[1] + "Z"
+			end_on = end_on_str[0] + " " + end_on_str[1] + "Z"
+			
+			# Check if the intended device exists or not		
+			device = get_object_or_404( Device, uid = uid )
+			
+			#
+			# For TemperatureReading
+			#
+			if( parameter == "temperature" ):
+			
+				# Get all readings of device
+				device_readings = TemperatureReading.objects.filter( device = uid )				
+				# Get device readings in range
+				device_readings = device_readings.filter( timestamp__gte = start_on ).filter( timestamp__lte = end_on )
+				# Order the readings				
+				device_readings.order_by( "timestamp" )
+				
+				# Set serializer
+				serializer_tp = TemperatureReadingSerializer( device_readings, many=True )
+				
+			
+			#
+			# For HumidityReading
+			#
+			elif( parameter == "humidity" ):
+				print( "\n\n Temp" )
+				# Get all readings of device
+				device_readings = HumidityReading.objects.filter( device = uid )				
+				# Get device readings in range
+				device_readings = device_readings.filter( timestamp__gte = start_on ).filter( timestamp__lte = end_on )
+				# Order the readings				
+				device_readings.order_by( "timestamp" )
+				
+				# Set serializer
+				serializer_hd = HumidityReadingSerializer( device_readings, many=True )
+		
+		
+		except ValidationError:
+			return Response( status = status.HTTP_409_CONFLICT )
+		except PermissionDenied:
+			return Response( status = status.HTTP_400_BAD_REQUEST )
+		except TypeError as e:
+			print( "\n\n " + str(e) + "\n\n" )
+			return Response( status = status.HTTP_417_EXPECTATION_FAILED )
+		except ObjectDoesNotExist:
+			return Response( status = status.HTTP_404_NOT_FOUND )
+		
+		# Return the readings
+		if( parameter == "temperature" ):
+			return Response( serializer_tp.data )
+		elif( parameter == "humidity" ):
+			return Response( serializer_hd.data )

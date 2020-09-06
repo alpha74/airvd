@@ -34,6 +34,7 @@ class TemperatureReading( models.Model ):
 	def __str__( self ):
 		return self.device.uid + " " + str(self.temperature)
 
+
 """
 	- uid : unique id of device
 	- humidity : humidity reading in decimal
