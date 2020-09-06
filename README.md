@@ -77,5 +77,11 @@
 
 -----
 
+#### To Improve
+App can be improved on following:
+- Payload cleaning.
+- Date range matching using timezones.
+
+
 #### Commit History Graph
 ![commit_history](https://github.com/alpha74/airvd/blob/master/FORREADME/img/commit_history.png)
