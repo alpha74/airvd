@@ -84,4 +84,4 @@ App can be improved on following:
 
 
 #### Commit History Graph
-![commit_history](https://github.com/alpha74/airvd/blob/master/FORREADME/img/commit_history.png)
+[Commit History Graph](https://github.com/alpha74/airvd/blob/master/FORREADME/img/commit_history.png)
